@@ -4,7 +4,6 @@ import Navbar from "react-bootstrap/Navbar";
 import edubinlogo from "../Assets/Images/logo.jpg";
 import { FaUserAlt } from "react-icons/fa";
 import { NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
