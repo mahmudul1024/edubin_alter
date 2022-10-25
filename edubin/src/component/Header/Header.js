@@ -3,9 +3,25 @@ import { FaUserAlt } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
+import { userContext } from "../../Authprovider/Authprovider";
+import { useContext } from "react";
+import { toast } from "react-toastify";
+import { toastSuccess } from "../../Others/Toaster";
 
 const Header = () => {
+  const { user, logOut } = useContext(userContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        toastSuccess();
+      })
+      .catch((er) => {
+        console.error(er.message);
+      });
+  };
+
   return (
     <div className="bg-yellow-400 px-4">
       <div className="px-4  py-2 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
@@ -73,33 +89,54 @@ const Header = () => {
             </ul>
           </div>
           <ul className="flex items-center hidden space-x-8 lg:flex">
-            <li>
-              <Link
-                to="/login"
-                title="Sign in"
-                className="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400"
-              >
-                Sign in
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/register"
-                className="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400"
-                title="Sign up"
-              >
-                Sign up
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400"
-                title="Profile pic"
-              >
-                <FaUserAlt className="  fs-4 " />
-              </Link>
-            </li>
+            {user?.uid ? (
+              <>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                    title="Log out"
+                  >
+                    Log Out
+                  </button>
+                </li>
+
+                {/* profile pic */}
+                <li>
+                  <Link
+                    to="/"
+                    className="font-medium tracking-wide text-gray-100 transition-colors duration-200 hover:text-teal-accent-400"
+                    title={user.displayName}
+                  >
+                    <FaUserAlt className="  fs-4 " />
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    aria-label="Sign in"
+                    title="Sign in"
+                    className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                  >
+                    Sign in
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/register"
+                    aria-label="Sign Up"
+                    title="Sign Up"
+                    className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
           <div className="lg:hidden">
             <button
@@ -204,27 +241,44 @@ const Header = () => {
                           Blog
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          to="/login"
-                          aria-label="Sign in"
-                          title="Sign in"
-                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
-                        >
-                          Sign in
-                        </Link>
-                      </li>
 
-                      <li>
-                        <Link
-                          to="/register"
-                          aria-label="Sign Up"
-                          title="Sign Up"
-                          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
-                        >
-                          Sign Up
-                        </Link>
-                      </li>
+                      {user?.uid ? (
+                        <>
+                          <li>
+                            <button
+                              onClick={handleLogout}
+                              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                              title="Sign up"
+                            >
+                              Log Out
+                            </button>
+                          </li>
+                        </>
+                      ) : (
+                        <>
+                          <li>
+                            <Link
+                              to="/login"
+                              aria-label="Sign in"
+                              title="Sign in"
+                              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                            >
+                              Sign in
+                            </Link>
+                          </li>
+
+                          <li>
+                            <Link
+                              to="/register"
+                              aria-label="Sign Up"
+                              title="Sign Up"
+                              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+                            >
+                              Sign Up
+                            </Link>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </nav>
                 </div>
